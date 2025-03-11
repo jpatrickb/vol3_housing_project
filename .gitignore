@@ -1,5 +1,9 @@
 # Data Files
 *.csv
+*.dta
 
 # PyCharm Files
 .idea
+.idea/*
+
+.DS_Store
