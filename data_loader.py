@@ -4,6 +4,7 @@ This module is used to merge the data files into a single dataframe.
 
 import pandas as pd
 import numpy as np
+from scipy.interpolate import interp1d
 
 
 def merge_data():
@@ -112,8 +113,23 @@ def merge_data():
     # Create multiindex array
     merged_data_multiindex = merged_data.set_index(['statefip', 'Date']).sort_index()
 
+    # Interpolate the data to fill in missing months for demographic data
+    interpolated_df = []
+
+    for group, df in merged_data_multiindex[merged_data_multiindex.columns[:-1]].groupby('statefip'):
+        df_len = df.shape[0]
+        n_months = df_len // 12 + 1
+        interp1d_func = interp1d(np.linspace(0, df_len, n_months), df.iloc[::12].values, axis=0, fill_value="extrapolate")
+        interp_df = pd.DataFrame(interp1d_func(np.arange(df_len)), columns=df.columns, index = df.index)
+        interpolated_df.append(interp_df)
+
+    interpolated_df
+    interpolated_df = pd.concat(interpolated_df)
+    interpolated_df['Median Home Price'] = merged_data_multiindex['Median Home Price'].values
+    interpolated_df
+
     # Save the merged data to a csv file
-    merged_data_multiindex.to_csv("Data_Files/state_full.csv")
+    interpolated_df.to_csv("Data_Files/state_full.csv")
 
 
 def load_data():
