@@ -7,8 +7,6 @@ To-do List:
 - built in evaluation for ARMA (models)
 - incorporate metrics into the conclusions
 - clearer transitions + section summaries (clear statement of results at the end of each section)
-- put figures 5 and 6 together, add a short explanatory caption (same with figures 2 and 3)
-- clustering as a pre-processing step, swap the order so clustering comes first
 - talk more about history, background, and importance of the project
 - say explicitly what data that Zillow dataset contains, talk about how reliable 
 - justify train-test-split
