@@ -11,6 +11,9 @@ To-do List:
 - clustering as a pre-processing step, swap the order so clustering comes first
 - find max number of clusters before singletons appear
 - talk more about history, background, and importance of the project
+=======
+>>>>>>> 3aad74af352a5c094c36f05139f72ef1225c4949
+- talk more about history, background, and importance of the project
 - say explicitly what data that Zillow dataset contains, talk about how reliable 
 - justify train-test-split
 - figure out a way to put the bayesian distribution table in the paper
