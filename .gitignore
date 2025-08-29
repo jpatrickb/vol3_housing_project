@@ -25,3 +25,22 @@ __pycache__
 *.nav
 *.snm
 *.toc
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Editors & env
+.vscode/
+.venv/
+.env
+
+# Windows
+desktop.ini
+
+# Python caches
+*.pyc
+*.pyo
+*.pyd
+.pytype/
+.mypy_cache/
+.pytest_cache/
