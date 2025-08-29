@@ -1,5 +1,5 @@
 ---
-# minimal front matter for Pages
+title: Housing Markets Project
 ---
 
 # Housing Markets Project
