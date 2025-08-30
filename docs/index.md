@@ -19,4 +19,5 @@ Explore
 - Notebooks: see [Notebooks](./notebooks.md)
 - Data notes: see [Data](./data.md)
 - Contributors: see [Contributors](./contributors.md)
+- Paper (PDF): [Download](./paper.pdf)
 
