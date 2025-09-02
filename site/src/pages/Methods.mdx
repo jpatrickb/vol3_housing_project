@@ -2,26 +2,26 @@
 
 We used a sequence of complementary methods to describe, cluster, and forecast housing markets while incorporating demographics.
 
-1) Data merging and scope
+### 1) Data merging and scope
 - Sources: Zillow HPI (monthly state-level median home prices) and CPS/IPUMS (annual demographics, income, property tax) for 51 regions (50 states + DC).
 - Cleaning: housing gaps were linearly interpolated; early missing stretches (e.g., North Dakota) were filled with first available value and flagged.
 - CPS interpolation: demographic features were interpolated to monthly cadence. We focused on major race categories (White, Black, Asian, Native American) due to sparsity in finer combinations.
 - Train/test split: 80/20 (train through Jan 2016, test Feb 2016–Jan 2020). Post-2020 excluded due to COVID-era shocks.
 
-2) Classical decomposition and detrending
+### 2) Classical decomposition and detrending
 - Evaluated differencing, moving average, and OLS detrending; differencing produced the most stationary series for downstream modeling.
 - Seasonal pattern: many states showed double-peaked seasonality within a year; residuals became erratic post-2020, justifying the pre-2020 forecasting window.
 
-3) Time-series K-means clustering
+### 3) Time-series K-means clustering
 - Clustered by percentage change in prices (2–20 clusters). Central states grouped together consistently; coastal states (e.g., CA, FL) often formed small distinct clusters.
 - Practical implication: geographic diversification can be approximated by selecting states from distinct clusters rather than neighboring regions.
 - Diminishing returns: beyond ~7 clusters, singleton groups proliferate, reducing interpretability.
 
-4) Forecasting models
+### 4) Forecasting models
 - Univariate ARIMA (auto_arima): searched p,q up to 12; best typical fit ARIMA(4,1,0). Forecasts tended to extend recent linear trends; accuracy varied widely across states with sometimes large predictive intervals.
 - VARMAX on clustered states: fitting per-cluster multivariate models improved trend tracking versus univariate ARIMA when clusters were non-trivial. VARMAX with demographic covariates often failed to converge and underperformed.
 
-5) Bayesian hierarchical modeling
+### 5) Bayesian hierarchical modeling
 - Linear model with state-specific intercepts/slopes and global coefficients for tax, population, and race proportions. Predictors standardized (z-scores) before sampling.
 - Priors: weakly informative normals; hierarchical priors on state intercept/slope (hyperparameters $\mu, \eta$) with exponential priors on their scales; Half-Cauchy noise scale.
 - Inference: PyMC3 NUTS with 4 chains, 2k tune + 2k draws per chain (8k total samples).
