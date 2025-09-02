@@ -14,7 +14,7 @@ export default function Home() {
           <li><a href="#/notebooks">Notebooks</a> — open notebooks on GitHub</li>
           <li><a href="#/data">Data</a> — sources and preprocessing</li>
           <li><a href="#/contributors">Contributors</a></li>
-          <li><a href="/vol3_housing_project/assets/paper.pdf" target="_blank" rel="noreferrer">Paper (PDF) ↗</a></li>
+          <li><a href="/vol3_housing_project/assets/write-up.pdf" target="_blank" rel="noreferrer">Paper (PDF) ↗</a></li>
         </ul>
       </div>
     </section>
