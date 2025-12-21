@@ -4,7 +4,7 @@ interface TopicCardProps {
   icon: string;
   title: string;
   description: string;
-  items?: string[];
+  items?: (string | React.ReactNode)[];
 }
 
 export const TopicCard: React.FC<TopicCardProps> = ({ icon, title, description, items }) => {
