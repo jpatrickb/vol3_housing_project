@@ -1,29 +1,96 @@
-# Methods
+import { Hero, Section, StepCard, ConceptCard } from '../components';
 
-We used a sequence of complementary methods to describe, cluster, and forecast housing markets while incorporating demographics.
+<Hero
+  title="Methodology"
+  subtitle="Multi-Stage Analytical Pipeline"
+/>
 
-### 1) Data merging and scope
-- Sources: Zillow HPI (monthly state-level median home prices) and CPS/IPUMS (annual demographics, income, property tax) for 51 regions (50 states + DC).
-- Cleaning: housing gaps were linearly interpolated; early missing stretches (e.g., North Dakota) were filled with first available value and flagged.
-- CPS interpolation: demographic features were interpolated to monthly cadence. We focused on major race categories (White, Black, Asian, Native American) due to sparsity in finer combinations.
-- Train/test split: 80/20 (train through Jan 2016, test Feb 2016–Jan 2020). Post-2020 excluded due to COVID-era shocks.
+<section className="overview">
+  <div className="container">
+    <h2>Approach</h2>
+    <p className="intro-text">
+      We used a sequence of complementary methods to describe, cluster, and forecast housing markets while incorporating demographics. Each stage builds on the previous one, progressing from data quality through classical analysis to modern Bayesian inference.
+    </p>
+  </div>
+</section>
 
-### 2) Classical decomposition and detrending
-- Evaluated differencing, moving average, and OLS detrending; differencing produced the most stationary series for downstream modeling.
-- Seasonal pattern: many states showed double-peaked seasonality within a year; residuals became erratic post-2020, justifying the pre-2020 forecasting window.
+<section className="practices-section">
+  <div className="container">
+    <h2>Analysis Pipeline</h2>
+    <p style={{ textAlign: 'center', maxWidth: '900px', margin: '0 auto 2rem', fontSize: '1rem', color: '#404040' }}>
+      Our methodology proceeds through five integrated stages, each providing insights into different aspects of housing market behavior.
+    </p>
+    <div className="practices-list">
+      <StepCard
+        number={1}
+        title="Data Merging and Scope"
+        description="We integrated Zillow HPI (monthly state-level median home prices) and CPS/IPUMS (annual demographics, income, property tax) for 51 regions. Housing gaps were linearly interpolated; early missing stretches were filled with first available values and flagged. Demographic features were interpolated to monthly cadence using major race categories. We split data chronologically: 80% training through Jan 2016, 20% testing Feb 2016–Jan 2020, excluding post-2020 COVID-era data."
+      />
+      <StepCard
+        number={2}
+        title="Classical Decomposition and Detrending"
+        description="We evaluated differencing, moving average, and OLS detrending, finding differencing produced the most stationary series. Many states showed double-peaked seasonality within a year. Residuals became erratic post-2020, justifying our pre-2020 forecasting window. This step establishes the baseline for stationarity required by time-series models."
+      />
+      <StepCard
+        number={3}
+        title="Time-Series K-Means Clustering"
+        description="We clustered states by percentage change in prices across 2–20 cluster solutions. Central states grouped together consistently while coastal states (CA, FL) formed small distinct clusters. Beyond ~7 clusters, singleton groups proliferate, reducing interpretability. Practical insight: geographic diversification can be approximated by selecting states from distinct clusters."
+      />
+      <StepCard
+        number={4}
+        title="Forecasting Models"
+        description="Univariate ARIMA (auto_arima, p,q up to 12) yielded typical ARIMA(4,1,0) fits that extended recent trends with variable accuracy. VARMAX on clustered states improved trend tracking versus univariate ARIMA. VARMAX with demographic covariates often failed to converge but provided useful insights when successful."
+      />
+      <StepCard
+        number={5}
+        title="Bayesian Hierarchical Modeling"
+        description="We fit a linear model with state-specific intercepts/slopes and global coefficients for tax, population, and race proportions. Predictors were z-score standardized. Priors: weakly informative normals on state effects, exponential priors on hyperparameter scales, Half-Cauchy on noise scale. Inference via PyMC3 NUTS: 4 chains, 2k tune + 2k draws per chain (8k total). Posterior intervals estimate growth level and rate per state."
+      />
+    </div>
+  </div>
+</section>
 
-### 3) Time-series K-means clustering
-- Clustered by percentage change in prices (2–20 clusters). Central states grouped together consistently; coastal states (e.g., CA, FL) often formed small distinct clusters.
-- Practical implication: geographic diversification can be approximated by selecting states from distinct clusters rather than neighboring regions.
-- Diminishing returns: beyond ~7 clusters, singleton groups proliferate, reducing interpretability.
+<section className="concepts">
+  <div className="container">
+    <h2>Key Methodological Concepts</h2>
+    <div className="concept-grid">
+      <ConceptCard
+        title="ARIMA Models"
+        definition="AutoRegressive Integrated Moving Average models capture temporal dependencies in stationary series. Integration (differencing) handles non-stationarity; AR and MA components capture autocorrelation."
+      />
+      <ConceptCard
+        title="VARMAX"
+        definition="Vector AutoRegressive Moving Average with eXogenous variables. Extends ARIMA to multiple correlated time series, leveraging interdependencies between state markets and demographic covariates."
+      />
+      <ConceptCard
+        title="Hierarchical Priors"
+        definition="Multi-level Bayesian specification where state-level parameters (intercepts, slopes) are drawn from a global distribution, sharing information across states while respecting regional differences."
+      />
+      <ConceptCard
+        title="Time-Series Clustering"
+        description="K-means applied to price change patterns groups states with similar dynamics. Enables separate VARMAX models per cluster, improving forecasting by accounting for regional market structure."
+      />
+      <ConceptCard
+        title="Classical Decomposition"
+        definition="Separates a time series into trend, seasonal, and residual components. Differencing removes trends; seasonal adjustment isolates cyclical patterns (e.g., summer price peaks)."
+      />
+      <ConceptCard
+        title="Stationarity & Differencing"
+        definition="Stationarity means no trend or changing variance. Differencing (subtracting consecutive values) converts non-stationary series to stationary, required by most time-series models."
+      />
+    </div>
+  </div>
+</section>
 
-### 4) Forecasting models
-- Univariate ARIMA (auto_arima): searched p,q up to 12; best typical fit ARIMA(4,1,0). Forecasts tended to extend recent linear trends; accuracy varied widely across states with sometimes large predictive intervals.
-- VARMAX on clustered states: fitting per-cluster multivariate models improved trend tracking versus univariate ARIMA when clusters were non-trivial. VARMAX with demographic covariates often failed to converge and underperformed.
-
-### 5) Bayesian hierarchical modeling
-- Linear model with state-specific intercepts/slopes and global coefficients for tax, population, and race proportions. Predictors standardized (z-scores) before sampling.
-- Priors: weakly informative normals; hierarchical priors on state intercept/slope (hyperparameters $\mu, \eta$) with exponential priors on their scales; Half-Cauchy noise scale.
-- Inference: PyMC3 NUTS with 4 chains, 2k tune + 2k draws per chain (8k total samples).
-- Outputs: posterior intervals for each state’s slope/intercept (growth level and rate) and global covariate effects; trace plots indicate good mixing.
-
+<section className="takeaways">
+  <div className="container">
+    <h2>Methodological Insights</h2>
+    <ul className="takeaway-list">
+      <li><strong>Differencing vs. other detrending:</strong> Linear differencing proved most effective for stationarity compared to moving averages or OLS detrending, providing a robust baseline for downstream modeling.</li>
+      <li><strong>Cluster convergence at ~7:</strong> K-means solutions converge around 7 clusters; beyond this, diminishing interpretability as singleton clusters proliferate. This optimal point balances regional granularity with statistical stability.</li>
+      <li><strong>VARMAX advantages:</strong> Multivariate models on clustered states improved trend tracking versus univariate ARIMA, demonstrating the value of capturing market interdependencies within regions.</li>
+      <li><strong>Hierarchical modeling benefits:</strong> Bayesian hierarchical priors enable borrowing strength across states while preserving regional heterogeneity—a critical balance for small-sample state-level analysis.</li>
+      <li><strong>Demographic effects are pre-2020:</strong> The relationships between demographics and housing growth reflect pre-pandemic economic structures. Post-2020 data excluded; model assumptions may not generalize to shock periods.</li>
+    </ul>
+  </div>
+</section>

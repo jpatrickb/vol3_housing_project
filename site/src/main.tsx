@@ -2,8 +2,8 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { HashRouter } from 'react-router-dom'
 import 'katex/dist/katex.min.css'
-import 'highlight.js/styles/github-dark.css'
-import './index.css'
+import 'highlight.js/styles/github.css'
+import './style.css'
 import App from './App.tsx'
 
 createRoot(document.getElementById('root')!).render(

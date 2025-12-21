@@ -1,25 +1,70 @@
-# Data
+import { Hero, Section, StepCard, DownloadCard } from '../components';
 
-Sources
-- Zillow Home Price Index (HPI): monthly state-level median home prices from January 2000 onward.
-- Current Population Survey (CPS) via IPUMS: annual demographic composition, income, and property tax.
+<Hero
+  title="Data Sources"
+  subtitle="Integrated Housing and Demographic Data"
+/>
 
-Merging and preprocessing
-- Housing data: isolated missing months interpolated linearly; early long gaps (e.g., North Dakota) filled with first observed value and flagged.
-- CPS data: restricted to major race categories (White, Black, Asian, Native American) due to sparsity; linearly interpolated to monthly cadence to align with HPI.
-- Merge keys: month and state. Post-2020 data excluded to avoid COVID-19 shock regime.
+<section className="overview">
+  <div className="container">
+    <h2>Data Overview</h2>
+    <p className="intro-text">
+      Our analysis integrates state-level housing price data from Zillow with demographic data from the Current Population Survey to study regional housing market dynamics.
+    </p>
+    <div className="grid-2">
+      <div className="card">
+        <h3>Zillow Home Price Index</h3>
+        <p>Monthly median home prices at the state level from January 2000 onward, providing the primary dependent variable for our time-series analysis.</p>
+      </div>
+      <div className="card">
+        <h3>CPS Demographics</h3>
+        <p>Annual demographic composition, income levels, and property tax data from the Current Population Survey via IPUMS, merged with housing prices.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-Modeling splits
-- Train: through January 2016 (80%). Test: February 2016–January 2020 (20%). Chronological split to prevent leakage.
+<section className="practices-section">
+  <div className="container">
+    <h2>Data Pipeline</h2>
+    <p style={{ textAlign: 'center', maxWidth: '900px', margin: '0 auto 2rem', fontSize: '1rem', color: '#404040' }}>
+      Our data processing follows a careful sequence of steps to ensure quality, consistency, and readiness for analysis.
+    </p>
+    <div className="practices-list">
+      <StepCard
+        number={1}
+        title="Data Acquisition"
+        description="Zillow HPI data spans monthly state-level median home prices from January 2000 onward. CPS data provides annual demographic snapshots including race composition, income, and property tax rates for all 50 states plus DC."
+      />
+      <StepCard
+        number={2}
+        title="Cleaning & Interpolation"
+        description="Housing data gaps are filled using linear interpolation for isolated missing months. Early long gaps (e.g., North Dakota pre-2005) are filled with first available values and flagged. CPS data is linearly interpolated to monthly cadence to align with HPI."
+      />
+      <StepCard
+        number={3}
+        title="Feature Engineering"
+        description="Demographic variables are restricted to major race categories (White, Black, Asian, Native American) due to sparsity in finer combinations. All features are standardized as z-scores before modeling. Post-2020 data is excluded to avoid COVID-19 shock regime."
+      />
+      <StepCard
+        number={4}
+        title="Train-Test Split"
+        description="Data is split chronologically: Training set through January 2016 (80% of pre-2020 data), test set February 2016–January 2020 (20%). This prevents leakage and tests out-of-sample forecasting performance."
+      />
+    </div>
+  </div>
+</section>
 
-Files and paths
-- Expected inputs:
-  - cps_data.dta at the project root (or update paths in src/data_loader.py)
-  - Data_Files/price_by_state_cleaned.csv (Zillow HPI)
-- Generated output:
-  - Data_Files/state_full.csv (created by `python -m src.data_loader`)
-
-Reproducibility notes
-- Large/raw data files are ignored by Git (.gitignore). Provide paths locally before running notebooks.
-- Demographic effects reflect pre-2020 relationships and may not generalize to shock periods.
-
+<section className="download">
+  <div className="container">
+    <h2>Reproducibility</h2>
+    <p>
+      All notebooks and data processing scripts are available on GitHub. While large raw data files are excluded from the repository for size reasons, they can be obtained from the original sources and processed using our provided scripts.
+    </p>
+    <div style={{ marginTop: '2rem', padding: '1.5rem', backgroundColor: '#f8f9fa', borderLeft: '4px solid #0052cc', borderRadius: '8px' }}>
+      <p style={{ margin: 0, fontSize: '0.95rem', color: '#333' }}>
+        <strong>To reproduce:</strong> Obtain CPS data from IPUMS and Zillow HPI data from the original sources, then run <code>python -m src.data_loader</code> to generate the merged dataset <code>Data_Files/state_full.csv</code>.
+      </p>
+    </div>
+  </div>
+</section>
