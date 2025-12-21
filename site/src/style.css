@@ -340,7 +340,7 @@ section.download {
 
 .btn-secondary {
   background: var(--color-primary);
-  color: white;
+  color: white !important;
   border: 2px solid var(--color-primary);
   font-weight: var(--font-weight-semibold);
 }
