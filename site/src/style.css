@@ -339,15 +339,16 @@ section.download {
 }
 
 .btn-secondary {
-  background: #f0f0f0;
-  color: var(--color-primary);
+  background: var(--color-primary);
+  color: white;
   border: 2px solid var(--color-primary);
   font-weight: var(--font-weight-semibold);
 }
 
 .btn-secondary:hover {
-  background: var(--color-primary);
+  background: var(--color-primary-dark);
   color: white;
+  border-color: var(--color-primary-dark);
 }
 
 .cta-buttons {
