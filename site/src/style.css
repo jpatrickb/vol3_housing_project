@@ -329,7 +329,7 @@ section.download {
 
 .btn-primary {
   background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
-  color: white;
+  color: white !important;
   box-shadow: 0 4px 15px rgba(0, 82, 204, 0.2);
 }
 
